@@ -76,7 +76,7 @@ public class CustomerManagerControllerTest {
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
 
-        verify(customerInputPort, times(1)).create(any());
+        verify(customerInputPort, never()).create(any());
     }
 
     private static CustomerRequest createCustomerRequest() {
