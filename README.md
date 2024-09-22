@@ -10,3 +10,5 @@ Para o cliente, será utilizado as seguintes dependências:
 - Spring Web
 - Spring Data JPA
 - Spring MySQL Driver
+- Spring Security
+- JJwt
