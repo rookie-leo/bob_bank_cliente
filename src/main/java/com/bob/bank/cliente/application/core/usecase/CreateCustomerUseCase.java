@@ -4,17 +4,17 @@ import com.bob.bank.cliente.adapters.in.controller.request.CustomerRequest;
 import com.bob.bank.cliente.application.core.domain.Address;
 import com.bob.bank.cliente.application.core.domain.Customer;
 import com.bob.bank.cliente.application.core.domain.Telefone;
-import com.bob.bank.cliente.application.ports.in.CustomerInputPort;
+import com.bob.bank.cliente.application.ports.in.CreateCustomerInputPort;
 import com.bob.bank.cliente.application.ports.out.CustomerOutPutPort;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerUseCase implements CustomerInputPort {
+public class CreateCustomerUseCase implements CreateCustomerInputPort {
 
     private CustomerOutPutPort customerAdapter;
 
-    public CustomerUseCase(CustomerOutPutPort customerAdapter) {
+    public CreateCustomerUseCase(CustomerOutPutPort customerAdapter) {
         this.customerAdapter = customerAdapter;
     }
 
@@ -35,4 +35,5 @@ public class CustomerUseCase implements CustomerInputPort {
 
         customerAdapter.create(customer);
     }
+
 }

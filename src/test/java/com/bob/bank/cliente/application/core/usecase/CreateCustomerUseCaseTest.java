@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-class CustomerUseCaseTest {
+class CreateCustomerUseCaseTest {
 
     @Mock
-    private CustomerUseCase useCase;
+    private CreateCustomerUseCase useCase;
 
     @BeforeEach
     void setUp() {

@@ -1,12 +1,16 @@
 package com.bob.bank.cliente.adapters.out.repositories.entity;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 @Entity(name = "clientes")
-public class CustomerEntity {
+public class CustomerEntity implements UserDetails {
 
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +22,7 @@ public class CustomerEntity {
     @Column(nullable = false, name = "sobre_nome")
     private String sobreNome;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "cpf")
     private String cpf;
 
     @Column(nullable = false)
@@ -124,5 +128,29 @@ public class CustomerEntity {
                 ", telefones=" + telefones +
                 ", address=" + address +
                 '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getPassword() {
+        if (isCredentialsNonExpired()) {
+            return this.senha;
+        }
+
+        throw new RuntimeException("Refaça seu lgoin"); //TODO - implementar uma exceção personalizada
+    }
+
+    @Override
+    public String getUsername() {
+        return this.cpf;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
     }
 }

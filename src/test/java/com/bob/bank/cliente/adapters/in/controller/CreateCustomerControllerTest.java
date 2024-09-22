@@ -3,7 +3,11 @@ package com.bob.bank.cliente.adapters.in.controller;
 import com.bob.bank.cliente.adapters.in.controller.request.AddressRequest;
 import com.bob.bank.cliente.adapters.in.controller.request.CustomerRequest;
 import com.bob.bank.cliente.adapters.in.controller.request.TelefoneRequest;
-import com.bob.bank.cliente.application.ports.in.CustomerInputPort;
+import com.bob.bank.cliente.adapters.security.CustomerDetailsServiceImpl;
+import com.bob.bank.cliente.adapters.security.impl.JwtServiceImpl;
+import com.bob.bank.cliente.application.core.usecase.security.JwtService;
+import com.bob.bank.cliente.application.ports.in.CreateCustomerInputPort;
+import com.bob.bank.cliente.config.security.TestSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +15,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
@@ -20,14 +26,22 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CustomerManagerController.class)
-public class CustomerManagerControllerTest {
+@ActiveProfiles("test")
+@Import({JwtServiceImpl.class, TestSecurityConfig.class})
+@WebMvcTest(CreateCustomerController.class)
+public class CreateCustomerControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private CustomerInputPort customerInputPort;
+    private JwtService jwtService;
+
+    @MockBean
+    private CustomerDetailsServiceImpl customerDetailsService;
+
+    @MockBean
+    private CreateCustomerInputPort customerInputPort;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -43,7 +57,7 @@ public class CustomerManagerControllerTest {
 
         doNothing().when(customerInputPort).create(any(CustomerRequest.class));
 
-        mockMvc.perform(post("/api/v1/customers")
+        mockMvc.perform(post("/api/v1/customers/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customerRequest)))
                 .andExpect(status().isCreated());
@@ -57,7 +71,7 @@ public class CustomerManagerControllerTest {
 
         doNothing().when(customerInputPort).create(any(CustomerRequest.class));
 
-        mockMvc.perform(post("/api/v1/customers")
+        mockMvc.perform(post("/api/v1/customers/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customerRequest)))
                 .andExpect(status().isCreated());
@@ -71,7 +85,7 @@ public class CustomerManagerControllerTest {
         invalidRequest.setNome("Fulano");
         invalidRequest.setSobreNome("Silva");
 
-        mockMvc.perform(post("/api/v1/customers")
+        mockMvc.perform(post("/api/v1/customers/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
